@@ -1,6 +1,6 @@
-# 📖 Phrack Reader CLI
+# 📖 Phrack Read CLI
 
-![Phrack Reader](https://img.shields.io/badge/Rust-CLI-blue?style=for-the-badge&logo=rust) ![Crate Version](https://img.shields.io/crates/v/phrack-read?style=for-the-badge)
+![Phrack Read](https://img.shields.io/badge/Rust-CLI-blue?style=for-the-badge&logo=rust) ![Crate Version](https://img.shields.io/crates/v/phrack-read?style=for-the-badge)
 
 
 A powerful and elegant command-line tool to read **Phrack Magazine** articles directly from your terminal with smooth navigation and a beautiful display format.
@@ -17,19 +17,19 @@ A powerful and elegant command-line tool to read **Phrack Magazine** articles di
 
 ## 📦 Installation
 
-To install **Phrack Reader CLI**, you need **Rust** installed. Run:
+To install **Phrack Read CLI**, you need **Rust** installed. Run:
 
 ```sh
-cargo install phrack_reader
+cargo install phrack-read
 ```
 
 Or clone the repository and build manually:
 
 ```sh
-git clone https://github.com/yourusername/phrack_reader.git
-cd phrack_reader
+git clone https://github.com/PATEL96/phrack-read.git
+cd phrack-read
 cargo build --release
-./target/release/phrack_reader --help
+./target/release/phrack-read --help
 ```
 
 ---
@@ -39,13 +39,13 @@ cargo build --release
 Fetch and read a specific **Phrack issue** and **article**:
 
 ```sh
-phrack_reader <issue> <article>
+phrack-read <issue> <article>
 ```
 
 Example:
 
 ```sh
-phrack_reader 69 1
+phrack-read 69 1
 ```
 
 This command fetches **Issue 69, Article 1** and displays it in the terminal.

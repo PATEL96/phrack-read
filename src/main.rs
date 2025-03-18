@@ -1,5 +1,4 @@
 use std::io::{self, Write};
-use std::process;
 use clap::Parser;
 use reqwest;
 use scraper::{Html, Selector};
