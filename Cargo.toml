@@ -1,6 +1,6 @@
 [package]
 name = "phrack-read"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 authors = ["PATEL96 <contact@patel96.live>"]
 description = "A CLI tool to scrape and display Phrack articles"
