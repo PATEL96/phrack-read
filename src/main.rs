@@ -209,6 +209,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 KeyCode::Char('c') => {
                     let mut ctx: ClipboardContext = ClipboardProvider::new()?;
                     ctx.set_contents(url.clone())?;
+                    content_lines.push("Copied link to clipboard!".green().to_string());
                 }
                 KeyCode::Char('q') | KeyCode::Esc => break,
                 _ => {}
