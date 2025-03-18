@@ -156,7 +156,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         content_lines.push(String::new());
         content_lines.push(format!("╔{}╗", "═".repeat(78)));
 
-        let summary_text = format!("Direct Link to Article {}", count, url);
+        let summary_text = format!("Direct Link to Article {}", url);
         let padded_summary = format!("  {}  ", summary_text);
         let side_padding = (78 - UnicodeWidthStr::width(padded_summary.as_str())) / 2;
         let left_padding = side_padding;
