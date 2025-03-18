@@ -1,5 +1,7 @@
+use std::io::{self, Write};
 use clap::Parser;
-use clipboard::{ClipboardContext, ClipboardProvider};
+use reqwest;
+use scraper::{Html, Selector};
 use colored::*;
 use crossterm::{
     cursor,
@@ -7,9 +9,6 @@ use crossterm::{
     execute,
     terminal::{self, ClearType},
 };
-use reqwest;
-use scraper::{Html, Selector};
-use std::io::{self, Write};
 use unicode_width::UnicodeWidthStr;
 
 /// CLI to read Phrack magazine articles
@@ -41,11 +40,7 @@ impl ScreenState {
     }
 
     fn display(&self, stdout: &mut io::Stdout) -> io::Result<()> {
-        execute!(
-            stdout,
-            terminal::Clear(ClearType::All),
-            cursor::MoveTo(0, 0)
-        )?;
+        execute!(stdout, terminal::Clear(ClearType::All), cursor::MoveTo(0, 0))?;
 
         let end_line = std::cmp::min(self.current_line + self.terminal_height, self.content.len());
 
@@ -68,17 +63,10 @@ impl ScreenState {
             }
         }
 
-        let percentage = if self.content.is_empty() {
-            100
-        } else {
-            (end_line * 100) / self.content.len()
-        };
+        let percentage = if self.content.is_empty() { 100 } else { (end_line * 100) / self.content.len() };
         let status = format!(
             " Lines {}-{} of {} ({}%)  [↑/↓/PgUp/PgDn to navigate, q to quit] ",
-            self.current_line + 1,
-            end_line,
-            self.content.len(),
-            percentage
+            self.current_line + 1, end_line, self.content.len(), percentage
         );
 
         execute!(
@@ -119,11 +107,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
     let url = format!("https://phrack.org/issues/{}/{}", args.issue, args.article);
 
-    println!(
-        "{} {}",
-        "Fetching Article from:".bright_blue().bold(),
-        url.bright_green()
-    );
+    println!("{} {}", "Fetching Article from:".bright_blue().bold(), url.bright_green());
     println!("Loading content, please wait...");
 
     let client = reqwest::Client::builder()
@@ -146,12 +130,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let left_padding = side_padding;
     let right_padding = 78 - UnicodeWidthStr::width(padded_title.as_str()) - left_padding;
 
-    content_lines.push(format!(
-        "║{}{}{}║",
-        " ".repeat(left_padding),
-        padded_title,
-        " ".repeat(right_padding)
-    ));
+    content_lines.push(format!("║{}{}{}║", " ".repeat(left_padding), padded_title, " ".repeat(right_padding)));
     content_lines.push(format!("╚{}╝", "═".repeat(78)));
     content_lines.push(String::new());
 
@@ -177,18 +156,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         content_lines.push(String::new());
         content_lines.push(format!("╔{}╗", "═".repeat(78)));
 
-        let summary_text = format!("Direct Link to Article {}", url);
+        let summary_text = format!("Direct Link to Article {}", count, url);
         let padded_summary = format!("  {}  ", summary_text);
         let side_padding = (78 - UnicodeWidthStr::width(padded_summary.as_str())) / 2;
         let left_padding = side_padding;
         let right_padding = 78 - UnicodeWidthStr::width(padded_summary.as_str()) - left_padding;
 
-        content_lines.push(format!(
-            "║{}{}{}║",
-            " ".repeat(left_padding),
-            padded_summary,
-            " ".repeat(right_padding)
-        ));
+        content_lines.push(format!("║{}{}{}║", " ".repeat(left_padding), padded_summary, " ".repeat(right_padding)));
         content_lines.push(format!("╚{}╝", "═".repeat(78)));
     }
 
@@ -206,10 +180,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 KeyCode::Down => screen.scroll_down(1),
                 KeyCode::PageUp => screen.page_up(),
                 KeyCode::PageDown => screen.page_down(),
-                KeyCode::Char('c') => {
-                    let mut ctx: ClipboardContext = ClipboardProvider::new()?;
-                    ctx.set_contents(url.clone())?;
-                }
                 KeyCode::Char('q') | KeyCode::Esc => break,
                 _ => {}
             }
